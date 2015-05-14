@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/go-humble/humble/detect"
+	"github.com/go-humble/detect"
 	"github.com/gopherjs/gopherjs/js"
 	"honnef.co/go/js/dom"
 	"log"
