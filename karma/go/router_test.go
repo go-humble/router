@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-humble/humble/router"
+	"github.com/go-humble/router"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
 	"honnef.co/go/js/dom"
