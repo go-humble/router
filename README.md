@@ -3,7 +3,7 @@ Humble/Router
 
 [![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
 
-Version X.X.X (develop)
+Version 0.1.0
 
 A router for client-side web applications written in pure go which compiles to
 javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
