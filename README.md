@@ -191,7 +191,7 @@ the provided bash script: `./karma/test.sh`.
 Contributing
 ------------
 
-TODO
+See [CONTRIBUTING.md](https://github.com/go-humble/router/blob/master/CONTRIBUTING.md)
 
 License
 -------
