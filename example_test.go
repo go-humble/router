@@ -10,7 +10,7 @@ import (
 	"github.com/go-humble/router"
 )
 
-func ExampleRoutes() {
+func ExampleRouter_HandleFunc() {
 	// Create a new Router object
 	r := router.New()
 	// Use HandleFunc to add routes.
