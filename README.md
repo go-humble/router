@@ -188,12 +188,15 @@ Finally run the tests with `karma run karma/test-mac.conf.js` (changing the name
 If you are on a unix-like operating system, you can recompile and run the tests in one go by running
 the provided bash script: `./karma/test.sh`.
 
+
 Contributing
 ------------
 
 See [CONTRIBUTING.md](https://github.com/go-humble/router/blob/master/CONTRIBUTING.md)
 
+
 License
 -------
 
-TODO
+Router is licensed under the MIT License. See the [LICENSE](https://github.com/go-humble/router/blob/master/LICENSE)
+file for more information.
