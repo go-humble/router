@@ -1,3 +1,8 @@
+# Copyright 2015 Alex Browne and Soroush Pour.
+# Allrights reserved. Use of this source code is
+# governed by the MIT license, which can be found
+# in the LICENSE file.
+
 # This script compiles all the files in karma/go to karma/js
 # and then runs karma with the mac configuration. You must be
 # in the project root to run it.
