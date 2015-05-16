@@ -23,6 +23,9 @@ var (
 
 func init() {
 	if detect.IsClient() {
+		// We only want to initialize certain things if we are running
+		// inside a browser. Otherwise, they will cause the program to
+		// panic.
 		var ok bool
 		document, ok = dom.GetWindow().Document().(dom.HTMLDocument)
 		if !ok {
@@ -35,10 +38,11 @@ func init() {
 }
 
 // Router is responsible for handling routes. If history.pushState is
-// supported, it uses that to navigate from page to page and will listen
+// supported, it uses it to navigate from page to page and will listen
 // to the "onpopstate" event. Otherwise, it sets the hash component of the
 // url and listens to changes via the "onhashchange" event.
 type Router struct {
+	// routes is the set of routes for this router.
 	routes []*route
 	// ShouldInterceptLinks tells the router whether or not to intercept click events
 	// on links and call the Navigate method instead of the default behavior.
@@ -51,7 +55,7 @@ type Router struct {
 }
 
 // Handler is a function which is run in response to a specific
-// route. A Handler takes the url parameters as an argument.
+// route. A Handler takes the path parameters as an argument.
 type Handler func(params map[string]string)
 
 // New creates and returns a new router
@@ -61,10 +65,15 @@ func New() *Router {
 	}
 }
 
+// route is a representation of a specific route
 type route struct {
-	regex      *regexp.Regexp // Regex pattern that matches route
-	paramNames []string       // Ordered list of query parameters expected by route handler
-	handler    Handler        // Handler called when route is matched
+	// regex is a regex pattern that matches route
+	regex *regexp.Regexp
+	// paramNames is an ordered list of parameters expected
+	// by route handler
+	paramNames []string
+	// handler called when route is matched
+	handler Handler
 }
 
 // HandleFunc will cause the router to call f whenever window.location.pathname
@@ -199,7 +208,6 @@ func (r *Router) interceptLink(event dom.Event) {
 }
 
 // setInitialHash will set hash to / if there is currently no hash.
-// Then it will trigger the appropriate
 func (r *Router) setInitialHash() {
 	if getHash() == "" {
 		setHash("/")
@@ -225,8 +233,9 @@ func (r *Router) pathChanged(path string) {
 	bestRoute.handler(params)
 }
 
-// Compare given path against regex patterns of routes. Preference given to routes
-// with most literal (non-query) matches. For example if we have the following:
+// findBestRoute compares the given path against regex patterns of routes.
+// Preference given to routes with most literal (non-parameter) matches. For
+// example if we have the following:
 //   Route 1: /todos/work
 //   Route 2: /todos/{category}
 // And the path argument is "/todos/work", the bestRoute would be todos/work
