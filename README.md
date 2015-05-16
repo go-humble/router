@@ -1,12 +1,14 @@
 Humble/Router
 =============
 
-Version X.X.X (develop)
+[![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
+
+Version 0.1.0
 
 A router for client-side web applications written in pure go which compiles to
-javascript via [gopherjs](github.com/gopherjs/gopherjs). Router works great as a
+javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
 stand-alone package or in combintation with other packages in the
-[Humble Framework](github.com/go-humble/humble).
+[Humble Framework](https://github.com/go-humble/humble).
 
 Router supports the following features:
 
@@ -24,7 +26,7 @@ Browser Support
 
 Router works with IE9+ (with a
 [polyfill for typed arrays](https://github.com/inexorabletash/polyfill/blob/master/typedarray.js))
-and all other modern browsers. Router compiles to javascript via [gopherjs](github.com/gopherjs/gopherjs)
+and all other modern browsers. Router compiles to javascript via [gopherjs](https://github.com/gopherjs/gopherjs)
 and this is a gopherjs limitation.
 
 Router is regularly tested with the latest versions of Firefox, Chrome, and Safari on Mac OS.
