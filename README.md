@@ -62,9 +62,8 @@ r := router.New()
 // Use HandleFunc to add routes.
 r.HandleFunc("/people", indexPeople)
 r.HandleFunc("/people/{id}", showPerson)
-// You must call Start, for the routes to take into effect.
-// Start causes the router to listen for changes in the url
-// and trigger the appropriate handler function.
+// You must call Start in order to start listening for changes
+// in the url and trigger the appropriate handler function.
 r.Start()
 ```
 
