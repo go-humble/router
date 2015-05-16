@@ -2,11 +2,11 @@
 // go which compiles to javascript via [gopherjs](github.com/gopherjs/gopherjs).
 // Router works great as a stand-alone package or in combintation with other
 // packages in the Humble Framework (See github.com/go-humble/humble).
-
+//
 // Version X.X.X (develop)
-
+//
 // Router supports the following features:
-
+//
 //   - Write code in pure go. It feels like go, follows go idioms, and
 //     compiles with the go tools.
 //   - Each route consists of a path and a handler function which is
