@@ -86,7 +86,7 @@ func TestRouter(t *testing.T) {
 			handler := generateTestHandler(path, &gotPath, &gotParams)
 			r.HandleFunc(path, handler)
 		}
-		r.pathChanged(tc.path)
+		r.pathChanged(tc.path, false)
 		if gotPath != tc.expectedPath {
 			t.Errorf("Failed for path=%s. Expected path: %s, Got path: %s", tc.path, tc.expectedPath, gotPath)
 		}
@@ -99,9 +99,9 @@ func TestRouter(t *testing.T) {
 }
 
 func generateTestHandler(path string, gotPath *string, gotParams *map[string]string) Handler {
-	return func(params map[string]string) {
+	return func(context *Context) {
 		*gotPath = path
-		*gotParams = params
+		*gotParams = context.Params
 	}
 }
 
