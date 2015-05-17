@@ -54,14 +54,24 @@ type Router struct {
 	listener func(*js.Object)
 }
 
+// Context is used as an argument to Handlers
 type Context struct {
-	Params      map[string]string
-	Path        string
+	// Params is the parameters from the url as a map of names to values.
+	Params map[string]string
+	// Path is the path that triggered this particular route. If the hash
+	// fallback is being used, the value of path does not include the '#'
+	// symbol.
+	Path string
+	// InitialLoad is true iff this route was triggered during the initial
+	// page load. I.e. it is true if this is the first path that the browser
+	// was visiting when the javascript finished loading.
 	InitialLoad bool
 }
 
 // Handler is a function which is run in response to a specific
-// route. A Handler takes the path parameters as an argument.
+// route. A Handler takes a Context as an argument, which gives
+// handler functions access to path parameters and other important
+// information.
 type Handler func(context *Context)
 
 // New creates and returns a new router
@@ -224,7 +234,7 @@ func (r *Router) setInitialHash() {
 }
 
 // pathChanged should be called whenever the path changes and will trigger
-// the appropriate handler. initial should be true if this is the first
+// the appropriate handler. initial should be true iff this is the first
 // time the javascript is loaded on the page.
 func (r *Router) pathChanged(path string, initial bool) {
 	bestRoute, tokens := r.findBestRoute(path)
