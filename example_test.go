@@ -14,10 +14,10 @@ func ExampleRouter_HandleFunc() {
 	// Create a new Router object
 	r := router.New()
 	// Use HandleFunc to add routes.
-	r.HandleFunc("/greet/{name}", func(params map[string]string) {
+	r.HandleFunc("/greet/{name}", func(context *router.Context) {
 		// The handler for this route simply grabs the name parameter
 		// from the map of params and says hello.
-		fmt.Printf("Hello, %s\n", params["name"])
+		fmt.Printf("Hello, %s\n", context.Params["name"])
 	})
 	// You must call Start in order to start listening for changes
 	// in the url and trigger the appropriate handler function.

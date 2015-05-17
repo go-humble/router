@@ -54,9 +54,25 @@ type Router struct {
 	listener func(*js.Object)
 }
 
+// Context is used as an argument to Handlers
+type Context struct {
+	// Params is the parameters from the url as a map of names to values.
+	Params map[string]string
+	// Path is the path that triggered this particular route. If the hash
+	// fallback is being used, the value of path does not include the '#'
+	// symbol.
+	Path string
+	// InitialLoad is true iff this route was triggered during the initial
+	// page load. I.e. it is true if this is the first path that the browser
+	// was visiting when the javascript finished loading.
+	InitialLoad bool
+}
+
 // Handler is a function which is run in response to a specific
-// route. A Handler takes the path parameters as an argument.
-type Handler func(params map[string]string)
+// route. A Handler takes a Context as an argument, which gives
+// handler functions access to path parameters and other important
+// information.
+type Handler func(context *Context)
 
 // New creates and returns a new router
 func New() *Router {
@@ -113,6 +129,7 @@ func newRoute(path string, handler Handler) *route {
 // trigger the appropriate handler whenever there is a change.
 func (r *Router) Start() {
 	if browserSupportsPushState {
+		r.pathChanged(getPath(), true)
 		r.watchHistory()
 	} else {
 		r.setInitialHash()
@@ -140,7 +157,7 @@ func (r *Router) Stop() {
 func (r *Router) Navigate(path string) {
 	if browserSupportsPushState {
 		pushState(path)
-		r.pathChanged(path)
+		r.pathChanged(path, false)
 	} else {
 		setHash(path)
 	}
@@ -212,25 +229,30 @@ func (r *Router) setInitialHash() {
 	if getHash() == "" {
 		setHash("/")
 	} else {
-		r.pathChanged(getPathFromHash(getHash()))
+		r.pathChanged(getPathFromHash(getHash()), true)
 	}
 }
 
 // pathChanged should be called whenever the path changes and will trigger
-// the appropriate handler
-func (r *Router) pathChanged(path string) {
+// the appropriate handler. initial should be true iff this is the first
+// time the javascript is loaded on the page.
+func (r *Router) pathChanged(path string, initial bool) {
 	bestRoute, tokens := r.findBestRoute(path)
 	// If no routes match, we throw console error and no handlers are called
 	if bestRoute == nil {
 		log.Fatal("Could not find route to match: " + path)
 		return
 	}
-	// Make the params map and pass it to the handler
-	params := map[string]string{}
-	for i, token := range tokens {
-		params[bestRoute.paramNames[i]] = token
+	// Create the context and pass it through to the handler
+	c := &Context{
+		Path:        path,
+		InitialLoad: initial,
+		Params:      map[string]string{},
 	}
-	bestRoute.handler(params)
+	for i, token := range tokens {
+		c.Params[bestRoute.paramNames[i]] = token
+	}
+	bestRoute.handler(c)
 }
 
 // findBestRoute compares the given path against regex patterns of routes.
@@ -272,7 +294,7 @@ func (r *Router) watchHash() {
 	js.Global.Set("onhashchange", func() {
 		go func() {
 			path := getPathFromHash(getHash())
-			r.pathChanged(path)
+			r.pathChanged(path, false)
 		}()
 	})
 }
@@ -282,7 +304,7 @@ func (r *Router) watchHash() {
 func (r *Router) watchHistory() {
 	js.Global.Set("onpopstate", func() {
 		go func() {
-			r.pathChanged(getPath())
+			r.pathChanged(getPath(), false)
 			if r.ShouldInterceptLinks {
 				r.InterceptLinks()
 			}

@@ -3,7 +3,7 @@ Humble/Router
 
 [![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
 
-Version 0.1.0
+Version 0.2.0
 
 A router for client-side web applications written in pure go which compiles to
 javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
@@ -73,25 +73,40 @@ The second argument to HandleFunc should be a router.Handler, which has the foll
 definition:
 
 ```go
-type Handler func(params map[string]string)
+type Handler func(context *Context)
 ```
 
-So a router.Handler is any function which takes a map of string to string as an argument.
+And the Context type is defined as follows:
+
+```go
+type Context struct {
+	// Params is the parameters from the url as a map of names to values.
+	Params map[string]string
+	// Path is the path that triggered this particular route. If the hash
+	// fallback is being used, the value of path does not include the '#'
+	// symbol.
+	Path string
+	// InitialLoad is true iff this route was triggered during the initial
+	// page load. I.e. it is true if this is the first path that the browser
+	// was visiting when the javascript finished loading.
+	InitialLoad bool
+}
+```
 
 ### Accessing Parameters
 
-Parameters are accessed via the argument to router.Handlers. If we have a route defined
+Parameters are accessed via `context.Params`. If we have a route defined
 like this:
 
 ```go
 r.HandleFunc("/people/{id}", showPerson)
 ```
 
-And the path `/people/123` is triggered, then the parameters passed into peopleCtrl.Show
-would look like the following:
+And the path `/people/123` is triggered, then the parameters passed into the showPerson
+function would look like the following:
 
 ```go
-params = map[string]string{
+context.Params = map[string]string{
 	"id": "123",
 }
 ```
@@ -99,8 +114,8 @@ params = map[string]string{
 In our showPerson function, we could access the id parameter like so:
 
 ```go
-func showPerson(params map[string]string) {
-	id := params["id"]
+func showPerson(context *router.Context) {
+	id := context.Params["id"]
 	// ...
 }
 ```
