@@ -102,8 +102,8 @@ like this:
 r.HandleFunc("/people/{id}", showPerson)
 ```
 
-And the path `/people/123` is triggered, then the parameters passed into peopleCtrl.Show
-would look like the following:
+And the path `/people/123` is triggered, then the parameters passed into the showPerson
+function would look like the following:
 
 ```go
 context.Params = map[string]string{
