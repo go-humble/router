@@ -153,10 +153,10 @@ func main() {
 // given routeChan. This serves as an easy way for us to test which routes were
 // triggered and what params were provided.
 func newChanHandlerFunc(path string, routeChan chan route) router.Handler {
-	return func(params map[string]string) {
+	return func(context *router.Context) {
 		routeChan <- route{
 			path:   path,
-			params: params,
+			params: context.Params,
 		}
 	}
 }
