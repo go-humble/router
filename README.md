@@ -3,7 +3,7 @@ Humble/Router
 
 [![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
 
-Version X.X.X (develop)
+Version 0.2.1
 
 A router for client-side web applications written in pure go which compiles to
 javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
@@ -190,7 +190,7 @@ browsers themselves. Typically you install a karma launcher with `npm install -g
 You can edit the config file at `karma/test-mac.conf.js` or create a new one (e.g. `karma/test-windows.conf.js`)
 if you want to change the browsers that are tested on.
 
-Once you have installed all the dependencies, start karma with `karma start karma/test-mac.conf.js` (or 
+Once you have installed all the dependencies, start karma with `karma start karma/test-mac.conf.js` (or
 your customized config file, if applicable). Once karma is running, you can keep it running in between tests.
 
 Next you need to compile the test.go file to javascript so it can run in the browsers:
