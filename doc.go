@@ -3,7 +3,7 @@
 // Router works great as a stand-alone package or in combintation with other
 // packages in the Humble Framework (https://github.com/go-humble/humble).
 //
-// Version 0.2.0
+// Version 0.2.1
 //
 // Router supports the following features:
 //

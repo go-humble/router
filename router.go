@@ -6,12 +6,13 @@
 package router
 
 import (
-	"github.com/go-humble/detect"
-	"github.com/gopherjs/gopherjs/js"
-	"honnef.co/go/js/dom"
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/go-humble/detect"
+	"github.com/gopherjs/gopherjs/js"
+	"honnef.co/go/js/dom"
 )
 
 var (
@@ -22,7 +23,7 @@ var (
 )
 
 func init() {
-	if detect.IsClient() {
+	if detect.IsBrowser() {
 		// We only want to initialize certain things if we are running
 		// inside a browser. Otherwise, they will cause the program to
 		// panic.
