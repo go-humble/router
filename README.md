@@ -3,11 +3,11 @@ Humble/Router
 
 [![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
 
-Version 0.2.1
+Version 0.2.2
 
 A router for client-side web applications written in pure go which compiles to
 javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
-stand-alone package or in combintation with other packages in the
+stand-alone package or in combination with other packages in the
 [Humble Framework](https://github.com/go-humble/humble).
 
 Router supports the following features:
@@ -40,7 +40,7 @@ Installation
 Install router like you would any other go package:
 
 ```bash
-go get github.com/go-humble/router`
+go get github.com/go-humble/router
 ```
 
 You will also need to install gopherjs if you don't already have it. The latest version is
@@ -56,7 +56,7 @@ Quickstart Guide
 
 ### Declaring Routes
 
-Declaring routes works similaroy to other routing packages in go. Here's an example:
+Declaring routes works similarly to other routing packages in go. Here's an example:
 
 ```go
 // Create a new Router object
