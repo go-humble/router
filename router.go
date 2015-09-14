@@ -50,6 +50,9 @@ type Router struct {
 	// If it is set to true, the router will automatically intercept links when
 	// Start, Navigate, or Back are called, or when the onpopstate event is triggered.
 	ShouldInterceptLinks bool
+	// ForceHashURL tells the router to use the hash component of the url to
+	// represent different routes, even if history.pushState is supported.
+	ForceHashURL bool
 	// listener is the js.Object representation of a listener callback.
 	// It is required in order to use the RemoveEventListener method
 	listener func(*js.Object)
@@ -129,7 +132,7 @@ func newRoute(path string, handler Handler) *route {
 // Start causes the router to listen for changes to window.location and
 // trigger the appropriate handler whenever there is a change.
 func (r *Router) Start() {
-	if browserSupportsPushState {
+	if browserSupportsPushState && !r.ForceHashURL {
 		r.pathChanged(getPath(), true)
 		r.watchHistory()
 	} else {
@@ -144,7 +147,7 @@ func (r *Router) Start() {
 // Stop causes the router to stop listening for changes, and therefore
 // the router will not trigger any more router.Handler functions.
 func (r *Router) Stop() {
-	if browserSupportsPushState {
+	if browserSupportsPushState && !r.ForceHashURL {
 		js.Global.Set("onpopstate", nil)
 	} else {
 		js.Global.Set("onhashchange", nil)
@@ -156,7 +159,7 @@ func (r *Router) Stop() {
 // history.pushState, that will be used. Otherwise, Navigate will
 // set the hash component of window.location to the given path.
 func (r *Router) Navigate(path string) {
-	if browserSupportsPushState {
+	if browserSupportsPushState && !r.ForceHashURL {
 		pushState(path)
 		r.pathChanged(path, false)
 	} else {
