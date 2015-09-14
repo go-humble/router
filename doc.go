@@ -1,9 +1,8 @@
 // Package router is a router for client-side web applications written in pure
-// go which compiles to javascript via gopherjs (https://github.com/gopherjs/gopherjs).
-// Router works great as a stand-alone package or in combintation with other
-// packages in the Humble Framework (https://github.com/go-humble/humble).
+// go which compiles to javascript via gopherjs
+// (https://github.com/gopherjs/gopherjs).
 //
-// Version 0.2.2
+// Version 0.2.3
 //
 // Router supports the following features:
 //
