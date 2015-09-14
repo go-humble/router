@@ -6,9 +6,9 @@ Humble/Router
 Version X.X.X (develop)
 
 A router for client-side web applications written in pure go which compiles to
-javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works great as a
-stand-alone package or in combination with other packages in the
-[Humble Framework](https://github.com/go-humble/humble).
+javascript via [gopherjs](https://github.com/gopherjs/gopherjs). Router works
+great as a stand-alone package or in combination with other
+[Humble](https://github.com/go-humble/humble) packages.
 
 Router supports the following features:
 
@@ -43,12 +43,16 @@ Install router like you would any other go package:
 go get github.com/go-humble/router
 ```
 
-You will also need to install gopherjs if you don't already have it. The latest version is
-recommended. Install gopherjs with:
+You will also need to install gopherjs if you don't already have it. The latest
+version is recommended. Install gopherjs with:
 
 ```
 go get -u github.com/gopherjs/gopherjs
 ```
+
+You can compile your application to javascript using the `gopherjs build`
+command. Run `gopherjs --help` to learn more about the gopherjs command-line
+tool.
 
 
 Quickstart Guide
