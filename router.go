@@ -170,6 +170,15 @@ func (r *Router) Navigate(path string) {
 	}
 }
 
+// CanNavigate returns true if the specified path can be navigated by the
+// router, and false otherwise
+func (r *Router) CanNavigate(path string) bool {
+	if bestRoute, _ := r.findBestRoute(path); bestRoute != nil {
+		return true
+	}
+	return false
+}
+
 // Back will cause the browser to go back to the previous page.
 // It has the same effect as the user pressing the back button,
 // and is just a wrapper around history.back()
