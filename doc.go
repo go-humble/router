@@ -2,7 +2,7 @@
 // go which compiles to javascript via gopherjs
 // (https://github.com/gopherjs/gopherjs).
 //
-// Version X.X.X (develop)
+// Version 0.3.0
 //
 // Router supports the following features:
 //
