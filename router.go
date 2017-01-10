@@ -53,6 +53,10 @@ type Router struct {
 	// ForceHashURL tells the router to use the hash component of the url to
 	// represent different routes, even if history.pushState is supported.
 	ForceHashURL bool
+	// Verbose determines whether or not the router will log to console.log.
+	// If true, the router will log a message if, e.g., a match cannot be found for
+	// a particular path.
+	Verbose bool
 	// listener is the js.Object representation of a listener callback.
 	// It is required in order to use the RemoveEventListener method
 	listener func(*js.Object)
@@ -253,7 +257,9 @@ func (r *Router) pathChanged(path string, initial bool) {
 	bestRoute, tokens := r.findBestRoute(path)
 	// If no routes match, we throw console error and no handlers are called
 	if bestRoute == nil {
-		log.Fatal("Could not find route to match: " + path)
+		if r.Verbose {
+			log.Println("Could not find route to match: " + path)
+		}
 		return
 	}
 	// Create the context and pass it through to the handler
