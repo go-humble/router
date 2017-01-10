@@ -207,15 +207,18 @@ func (r *Router) InterceptLinks() {
 		href := link.GetAttribute("href")
 		switch {
 		case href == "":
+			continue
 
 		case strings.HasPrefix(href, "http://"), strings.HasPrefix(href, "https://"), strings.HasPrefix(href, "//"):
 			// These are external links and should behave normally.
+			continue
 
 		case strings.HasPrefix(href, "#"):
 			// These are anchor links and should behave normally.
 			// Recall that even when we are using the hash trick, href
 			// attributes should be relative paths without the "#" and
 			// router will handle them appropriately.
+			continue
 
 		case strings.HasPrefix(href, "/"):
 			// These are relative links. The kind that we want to intercept.
