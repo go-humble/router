@@ -121,7 +121,7 @@ func newRoute(path string, handler Handler) *route {
 	for _, str := range strs {
 		if str[0] == '{' && str[len(str)-1] == '}' {
 			pattern += `/`
-			pattern += `([\w+-]*)`
+			pattern += `([^/]*)`
 			route.paramNames = append(route.paramNames, str[1:(len(str)-1)])
 		} else {
 			pattern += `/`
