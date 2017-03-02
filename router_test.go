@@ -13,10 +13,11 @@ import (
 // routeTestCases is format for test case. Each test case takes possible route paths, the URL path provided
 // and the expected route path and query parameters.
 var routeTestCases = []struct {
-	paths          []string
-	path           string
-	expectedPath   string
-	expectedParams map[string]string
+	paths               []string
+	path                string
+	expectedPath        string
+	expectedParams      map[string]string
+	expectedQueryParams map[string][]string
 }{
 	// Test route to /
 	{
@@ -104,15 +105,41 @@ var routeTestCases = []struct {
 			"imageType": "%20a+",
 		},
 	},
+	// Test real query param
+	{
+		paths:        []string{"/home", "/home/{homeId}", "/about"},
+		path:         "/home/55?foo=bar",
+		expectedPath: "/home/{homeId}",
+		expectedParams: map[string]string{
+			"homeId": "55",
+		},
+		expectedQueryParams: map[string][]string{
+			"foo": []string{"bar"},
+		},
+	},
+	// Test multiple real query params
+	{
+		paths:        []string{"/home", "/home/{homeId}", "/about"},
+		path:         "/home/55?foo=bar&foo=baz&qux=quux",
+		expectedPath: "/home/{homeId}",
+		expectedParams: map[string]string{
+			"homeId": "55",
+		},
+		expectedQueryParams: map[string][]string{
+			"foo": []string{"bar", "baz"},
+			"qux": []string{"quux"},
+		},
+	},
 }
 
 func TestRouter(t *testing.T) {
 	for _, tc := range routeTestCases {
 		gotPath := ""
 		gotParams := map[string]string{}
+		gotQueryParams := map[string][]string{}
 		r := New()
 		for _, path := range tc.paths {
-			handler := generateTestHandler(path, &gotPath, &gotParams)
+			handler := generateTestHandler(path, &gotPath, &gotParams, &gotQueryParams)
 			r.HandleFunc(path, handler)
 		}
 		r.pathChanged(tc.path, false)
@@ -124,13 +151,19 @@ func TestRouter(t *testing.T) {
 				t.Errorf("Failed for path=%s. Expected params: %s, Got params: %s", tc.path, tc.expectedParams, gotParams)
 			}
 		}
+		if tc.expectedQueryParams != nil {
+			if !reflect.DeepEqual(gotQueryParams, tc.expectedQueryParams) {
+				t.Errorf("Failed for path=%s. Expected query params: %s, Got query params: %s", tc.path, tc.expectedQueryParams, gotQueryParams)
+			}
+		}
 	}
 }
 
-func generateTestHandler(path string, gotPath *string, gotParams *map[string]string) Handler {
+func generateTestHandler(path string, gotPath *string, gotParams *map[string]string, gotQueryParams *map[string][]string) Handler {
 	return func(context *Context) {
 		*gotPath = path
 		*gotParams = context.Params
+		*gotQueryParams = context.QueryParams
 	}
 }
 
