@@ -75,6 +75,35 @@ var routeTestCases = []struct {
 		expectedPath:   "/home/all",
 		expectedParams: nil,
 	},
+	// Test query param with weird characters
+	{
+		paths:        []string{"/home", "/home/{homeId}", "/about"},
+		path:         "/home/@1.b$",
+		expectedPath: "/home/{homeId}",
+		expectedParams: map[string]string{
+			"homeId": "@1.b$",
+		},
+	},
+	// Test trailing slash after query param in path
+	{
+		paths:        []string{"/home", "/about", "/about/{aboutId}"},
+		path:         "/about/@1.b$/",
+		expectedPath: "/about/{aboutId}",
+		expectedParams: map[string]string{
+			"aboutId": "@1.b$",
+		},
+	},
+	// Test multiple query params
+	{
+		paths:        []string{"/home", "/home/{homeId}", "/about", "/home/{homeId}/image/{imageSize}/{imageType}/jpg"},
+		path:         "/home/@1.b$/image/800^600/%20a+/jpg",
+		expectedPath: "/home/{homeId}/image/{imageSize}/{imageType}/jpg",
+		expectedParams: map[string]string{
+			"homeId":    "@1.b$",
+			"imageSize": "800^600",
+			"imageType": "%20a+",
+		},
+	},
 }
 
 func TestRouter(t *testing.T) {
