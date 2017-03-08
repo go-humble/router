@@ -290,10 +290,7 @@ func (r *Router) pathChanged(path string, initial bool) {
 // And the path argument is "/todos/work", the bestRoute would be todos/work
 // because the string "work" matches the literal in Route 1.
 func (r Router) findBestRoute(path string) (bestRoute *route, tokens []string, params map[string][]string) {
-	parts := strings.Split(path, "?")
-	if len(parts) > 2 {
-		log.Println("Path has more than two parts: " + path)
-	}
+	parts := strings.SplitN(path, "?", 2)
 	leastParams := -1
 	for _, route := range r.routes {
 		matches := route.regex.FindStringSubmatch(parts[0])
@@ -306,13 +303,21 @@ func (r Router) findBestRoute(path string) (bestRoute *route, tokens []string, p
 		}
 	}
 	if len(parts) > 1 {
-		var err error
-		params, err = url.ParseQuery(parts[1])
-		if err != nil {
-			log.Printf("Error parsing query %v: %v", parts[1], err)
-		}
+		params = r.parseQueryPart(parts[1])
 	}
 	return bestRoute, tokens, params
+}
+
+// parseQueryPart extracts query params from the query part of the URL
+func (r Router) parseQueryPart(queryPart string) (params map[string][]string) {
+	var err error
+	params, err = url.ParseQuery(queryPart)
+	if err != nil && r.Verbose {
+		// the URL spec allows things other than name/value pairs in the query
+		// part of the URL, so we optionally log a message
+		log.Printf("Error parsing query %v: %v", queryPart, err)
+	}
+	return
 }
 
 // removeEmptyStrings removes any empty strings from strings
