@@ -1,7 +1,7 @@
 Humble/Router
 =============
 
-[![Version](https://img.shields.io/badge/version-0.4.0-5272B4.svg)](https://github.com/go-humble/router/releases)
+[![Version](https://img.shields.io/badge/version-0.5.0-5272B4.svg)](https://github.com/go-humble/router/releases)
 [![GoDoc](https://godoc.org/github.com/go-humble/router?status.svg)](https://godoc.org/github.com/go-humble/router)
 
 A router for client-side web applications written in pure go which compiles to
