@@ -7,6 +7,7 @@ package router
 
 import (
 	"log"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -74,6 +75,9 @@ type Context struct {
 	// page load. I.e. it is true if this is the first path that the browser
 	// was visiting when the javascript finished loading.
 	InitialLoad bool
+	// QueryParams is the query params from the URL. Because params may be
+	// repeated with different values, the value part of the map is a slice
+	QueryParams map[string][]string
 }
 
 // Handler is a function which is run in response to a specific
@@ -177,7 +181,7 @@ func (r *Router) Navigate(path string) {
 // CanNavigate returns true if the specified path can be navigated by the
 // router, and false otherwise
 func (r *Router) CanNavigate(path string) bool {
-	if bestRoute, _ := r.findBestRoute(path); bestRoute != nil {
+	if bestRoute, _, _ := r.findBestRoute(path); bestRoute != nil {
 		return true
 	}
 	return false
@@ -238,7 +242,7 @@ func (r *Router) interceptLink(event dom.Event) {
 	path := event.CurrentTarget().GetAttribute("href")
 	// Only intercept the click event if we have a route which matches
 	// Otherwise, just do the default.
-	if bestRoute, _ := r.findBestRoute(path); bestRoute != nil {
+	if bestRoute, _, _ := r.findBestRoute(path); bestRoute != nil {
 		event.PreventDefault()
 		go r.Navigate(path)
 	}
@@ -257,7 +261,7 @@ func (r *Router) setInitialHash() {
 // the appropriate handler. initial should be true iff this is the first
 // time the javascript is loaded on the page.
 func (r *Router) pathChanged(path string, initial bool) {
-	bestRoute, tokens := r.findBestRoute(path)
+	bestRoute, tokens, params := r.findBestRoute(path)
 	// If no routes match, we throw console error and no handlers are called
 	if bestRoute == nil {
 		if r.Verbose {
@@ -270,6 +274,7 @@ func (r *Router) pathChanged(path string, initial bool) {
 		Path:        path,
 		InitialLoad: initial,
 		Params:      map[string]string{},
+		QueryParams: params,
 	}
 	for i, token := range tokens {
 		c.Params[bestRoute.paramNames[i]] = token
@@ -284,10 +289,11 @@ func (r *Router) pathChanged(path string, initial bool) {
 //   Route 2: /todos/{category}
 // And the path argument is "/todos/work", the bestRoute would be todos/work
 // because the string "work" matches the literal in Route 1.
-func (r Router) findBestRoute(path string) (bestRoute *route, tokens []string) {
+func (r Router) findBestRoute(path string) (bestRoute *route, tokens []string, params map[string][]string) {
+	parts := strings.SplitN(path, "?", 2)
 	leastParams := -1
 	for _, route := range r.routes {
-		matches := route.regex.FindStringSubmatch(path)
+		matches := route.regex.FindStringSubmatch(parts[0])
 		if matches != nil {
 			if (leastParams == -1) || (len(matches) < leastParams) {
 				leastParams = len(matches)
@@ -296,7 +302,22 @@ func (r Router) findBestRoute(path string) (bestRoute *route, tokens []string) {
 			}
 		}
 	}
-	return bestRoute, tokens
+	if len(parts) > 1 {
+		params = r.parseQueryPart(parts[1])
+	}
+	return bestRoute, tokens, params
+}
+
+// parseQueryPart extracts query params from the query part of the URL
+func (r Router) parseQueryPart(queryPart string) (params map[string][]string) {
+	var err error
+	params, err = url.ParseQuery(queryPart)
+	if err != nil && r.Verbose {
+		// the URL spec allows things other than name/value pairs in the query
+		// part of the URL, so we optionally log a message
+		log.Printf("Error parsing query %v: %v", queryPart, err)
+	}
+	return
 }
 
 // removeEmptyStrings removes any empty strings from strings
