@@ -130,6 +130,20 @@ var routeTestCases = []struct {
 			"qux": []string{"quux"},
 		},
 	},
+	// Test hash URL matching
+	{
+		paths:          []string{"/home", "/about"},
+		path:           "/about#foo",
+		expectedPath:   "/about",
+		expectedParams: nil,
+	},
+	// Test hash URL matching with extra hashes
+	{
+		paths:          []string{"/home", "/about"},
+		path:           "/about#foo#bar",
+		expectedPath:   "/about",
+		expectedParams: nil,
+	},
 }
 
 func TestRouter(t *testing.T) {

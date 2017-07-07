@@ -261,7 +261,7 @@ func (r *Router) setInitialHash() {
 // the appropriate handler. initial should be true iff this is the first
 // time the javascript is loaded on the page.
 func (r *Router) pathChanged(path string, initial bool) {
-	bestRoute, tokens, params := r.findBestRoute(path)
+	bestRoute, tokens, params := r.findBestRoute(strings.SplitN(path, "#", 2)[0])
 	// If no routes match, we throw console error and no handlers are called
 	if bestRoute == nil {
 		if r.Verbose {
